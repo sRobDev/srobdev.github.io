@@ -1,0 +1,111 @@
+<canvas id="whatever" width="1000" height="1000"></canvas>
+<script>
+
+var colors = [
+  'red', 'green', 'orange', 'blue', 'purple', 'yellow',
+  'lime', 'cyan', 'pink', 'navy'
+];
+var canv = document.getElementById('whatever');
+document.addEventListener('keydown', keyPush);
+var ctx = canv.getContext('2d');
+
+var enemyCount = 0;
+var lives = 3;
+
+var xVelocity = 500;
+var yVelocity = 500;
+
+var playerWidth = 20;
+var playerHeight = 20;
+
+window.onload = function(){
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, 1000, 1000);
+  game();
+}
+
+function game(){
+  for(var i = 0; i < 10; i++){
+    drawEnemyRectangle();
+  }
+
+  setInterval(update, 1000/60);
+}
+
+function update(){
+  drawGoodGuy();
+  return;
+}
+
+function keyPush(evt){
+  ctx.fillStyle = 'black';
+  ctx.fillRect(xVelocity, yVelocity, playerWidth, playerHeight);
+
+  switch(evt.keyCode) {
+		case 37:
+      if(!detectCollision('left')){
+          xVelocity -= 5;
+      }
+			break;
+		case 38:
+      if(!detectCollision('up')){
+        yVelocity -= 5;
+      }
+			break;
+		case 39:
+      if(!detectCollision('right')){
+  			xVelocity += 5;
+      }
+			break;
+		case 40:
+      if(!detectCollision('down')){
+  			yVelocity += 5;
+      }
+			break;
+	}
+}
+
+function detectCollision(direction){
+  switch(direction){
+    case 'left':
+      return checkLeftCollision();
+    case 'up':
+      return checkUpCollision();
+    case 'right':
+      return checkRightCollision();
+    case 'down':
+      return checkDownCollision();
+  }
+}
+
+function checkLeftCollision(){
+  return (xVelocity === 0);
+}
+
+function checkUpCollision(){
+  return (yVelocity === 0);
+}
+
+function checkRightCollision(){
+  return (xVelocity + playerWidth === canv.width);
+}
+
+function checkDownCollision(){
+  return (yVelocity + playerHeight === canv.height);
+}
+
+function drawGoodGuy(){
+  ctx.fillStyle = 'white';
+  ctx.fillRect(xVelocity, yVelocity, 20, 20);
+}
+
+function drawEnemyRectangle(){
+  var color = Math.floor((Math.random() * 10) + 1);
+  var xCoord = Math.floor((Math.random() * 900) + 1);
+  var yCoord = Math.floor((Math.random() * 900) + 1);
+
+  ctx.fillStyle = colors[color];
+  ctx.fillRect(xCoord, yCoord, 100, 100);
+}
+
+</script>
