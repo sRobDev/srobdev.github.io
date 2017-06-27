@@ -97,10 +97,10 @@ function checkBallCollision(){
   if(y + dy < ballRadius){
     changeBallColor();
     dy = -dy;
-  } else if(y + dy > canvas.height - ballRadius){
+  } else if(y + paddleHeight > canvas.height - ballRadius){
     if(x > paddleX && x < paddleX + paddleWidth){
       dy = -dy;
-    } else {
+    } else if(y > canvas.height - ballRadius){
       checkLives();
     }
   }
@@ -114,7 +114,7 @@ function checkBallCollision(){
 function checkLives(){
   lives--;
   if(!lives){
-    alert('GAME OVER');
+    //alert('GAME OVER');
     document.location.reload();
   } else {
     x = canvas.width / 2;
@@ -128,7 +128,11 @@ function checkBallImpact(){
   for(c = 0; c < brickColumnCount; c++){
     for(r = 0; r < brickRowCount; r++){
       var brick = bricks[c][r];
-      if(x > brick.x && x < brick.x + brickWidth && y > brick.y && y < brick.y + brickHeight && brick.status == 1){
+
+      //detect top hit
+      //if y >
+      if(detectTopCollision(brick)){
+        // alert('ghetto pause')
         dy = -dy;
         brick.status = 0;
         score++;
@@ -138,9 +142,16 @@ function checkBallImpact(){
   }
 }
 
+function detectTopCollision(brick){
+  if(x > brick.x &&
+    x < brick.x + brickWidth &&
+    y > brick.y &&
+    y < brick.y + brickHeight + ballRadius &&
+    brick.status == 1) return true;
+}
 function checkGameOver(){
   if(score == brickRowCount * brickColumnCount){
-    alert('You win!\n' + 'Score: ' + score);
+    //alert('You win!\n' + 'Score: ' + score);
     document.location.reload();
   }
 }
@@ -159,7 +170,7 @@ function drawLives(){
 
 function mouseMoveHandler(e){
   var relativeX = e.clientX - canvas.offsetLeft;
-  if(relativeX > 0 && relativeX < canvas.width){
+  if(relativeX > 0 + (paddleWidth / 2) && relativeX < canvas.width - (paddleWidth / 2)){
     paddleX = relativeX - paddleWidth / 2;
   }
 }
@@ -172,7 +183,7 @@ function draw(){
   drawScore();
   drawLives();
   checkBallImpact();
-  
+
   checkPaddleCollision();
   checkBallCollision();
 
