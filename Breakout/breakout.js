@@ -114,7 +114,7 @@ function checkBallCollision(){
 function checkLives(){
   lives--;
   if(!lives){
-    //alert('GAME OVER');
+    alert('GAME OVER\n' + 'Score: ' + score);
     document.location.reload();
   } else {
     x = canvas.width / 2;
@@ -129,10 +129,7 @@ function checkBallImpact(){
     for(r = 0; r < brickRowCount; r++){
       var brick = bricks[c][r];
 
-      //detect top hit
-      //if y >
       if(detectTopCollision(brick)){
-        // alert('ghetto pause')
         dy = -dy;
         brick.status = 0;
         score++;
@@ -143,15 +140,20 @@ function checkBallImpact(){
 }
 
 function detectTopCollision(brick){
-  if(x > brick.x &&
+  if(((x > brick.x &&
     x < brick.x + brickWidth &&
     y > brick.y &&
-    y < brick.y + brickHeight + ballRadius &&
+    y < brick.y + brickHeight + ballRadius) ||
+
+    (y < brick.y &&
+    y + brickHeight + ballRadius > brick.y &&
+    x > brick.x &&
+    x < brick.x + brickWidth)) &&
     brick.status == 1) return true;
 }
 function checkGameOver(){
   if(score == brickRowCount * brickColumnCount){
-    //alert('You win!\n' + 'Score: ' + score);
+    alert('You win!\n' + 'Score: ' + score);
     document.location.reload();
   }
 }
